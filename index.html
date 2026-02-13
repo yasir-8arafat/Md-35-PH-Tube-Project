@@ -25,12 +25,40 @@
     </style>
 </head>
 
-<body class="inter-Font">
-    <header>
-
+<body class="inter-Font pb-6">
+    <header class="container mx-auto py-8 border-b-2 border-gray-200">
+        <nav class="flex items-center justify-between px-4 sm:px-3">
+            <!-- logo DIv -->
+            <div class="w-[100px] sm:w-[180px]">
+                <img class="w-full" src="asset/Logo.png" alt="">
+            </div>
+            <!-- btn DIV -->
+            <div class="hidden sm:block">
+                <button
+                    class="text-xl text-[#252525] font-medium px-5 py-3 bg-gray-300 rounded-xl cursor-pointer hover:bg-green-200">Sort
+                    by
+                    view</button>
+            </div>
+            <!-- blog btn div -->
+            <div>
+                <button class="text-white font-medium text-lg bg-orange-500 px-5 py-3 rounded-lg">Blog</button>
+            </div>
+        </nav>
     </header>
-    <main>
-
+    <main class="container mx-auto px-3">
+        <!-- category btn section -->
+        <section>
+            <!-- category btn container -->
+            <div id="category-Container" class="py-8 flex gap-1 sm:gap-6 justify-center items-center">
+                <div>
+                    <button class="btn bg-[#FF1F3D] text-white">ALL</button>
+                </div>
+            </div>
+        </section>
+        <!-- Videos Load card section -->
+        <section id="video-container"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-6">
+        </section>
     </main>
     <footer>
 
