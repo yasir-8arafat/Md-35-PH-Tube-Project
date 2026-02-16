@@ -1,9 +1,8 @@
-const check = {
-    "verified": ""
+const myBoy = {
+    name: "fukofuko",
+    age: 1234,
+    country: "valovash"
 }
-if (check.verified) {
-    console.log(true)
-}
-else {
-    console.log(false)
-}
+const serial = Object.keys(myBoy);
+const serialNo = serial[1];
+console.log(myBoy[serialNo]);

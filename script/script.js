@@ -1,17 +1,73 @@
 // All Load fatching Function
+// removeActiveClass fubction
+const removeActiveClass = () => {
+    document.querySelectorAll(".active").forEach(btn => {
+        btn.classList.remove("active");
+    });
+}
+
+const loadDetails = (vid_id) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${vid_id}`;
+    fetch(url).then(res => res.json()).then(data => {
+        displayDetails(data);
+    });
+}
+
 const loadCategorys = () => {
+    showLoad()
     fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
         .then((res) => res.json())
         .then((data) => displayCategorys(data))
 }
-const loadVideos = () => {
-    fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+
+const loadSearchVideos = (title) => {
+    showLoad();
+    const url = `https://openapi.programming-hero.com/api/phero-tube/videos?title=${title}`;
+    fetch(url).then((res) => res.json()).then((data) => {
+        document.querySelectorAll(".cmnBtn").forEach(x => {
+            x.setAttribute("disabled", "");
+        })
+        removeActiveClass();
+        displayVideos(data);
+    })
+}
+
+const loadVideos = (searchtxt = "") => {
+    showLoad();
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchtxt}`)
         .then((res) => res.json())
-        .then((data) => displayVideos(data))
+        .then((data) => {
+            removeActiveClass();
+            document.getElementById("all-btn").classList.add("active");
+            displayVideos(data)
+        })
+}
+const loadCategoryVideos = (id) => {
+    showLoad()
+    const url = `
+    https://openapi.programming-hero.com/api/phero-tube/category/${id}
+    `;
+    fetch(url).then((res) => res.json()).then((data) => {
+        removeActiveClass();
+        let clickedBtn = document.getElementById(`btn-${id}`);
+        clickedBtn.classList.add("active");
+        displayVideos(data);
+    });
 }
 
 
 // All Executive Function
+
+
+const showLoad = () => {
+    document.getElementById("load").classList.remove("hidden")
+    document.getElementById("video-container").classList.add("hidden")
+}
+const removeLoad = () => {
+    document.getElementById("load").classList.add("hidden");
+    document.getElementById("video-container").classList.remove("hidden");
+}
+
 
 // category executation functioon
 const displayCategorys = (obj) => {
@@ -20,13 +76,40 @@ const displayCategorys = (obj) => {
     for (let cat of arrOfObj) {
         const btnDiv = document.createElement("div");
         btnDiv.innerHTML = `
-        <button class="btn hover:bg-[#FF1F3D] hover:text-white">${cat.category}</button>
+        <button id="btn-${cat.category_id}" class="btn cmnBtn hover:bg-[#FF1F3D] hover:text-white" onclick="loadCategoryVideos(${cat.category_id})">${cat.category}</button>
         `;
         container.appendChild(btnDiv);
+        removeLoad();
     }
 }
 
+const displayDetails = (fullVidObj) => {
+    const modalContainer = document.getElementById("details-container");
+    modalContainer.innerHTML = "";
+    const newElement = document.createElement("div");
+    newElement.innerHTML = `
+    <div class="card bg-base-100 image-full shadow-sm">
+  <figure>
+    <img class = "w-full h-full object-cover"
+      src="${fullVidObj.video.thumbnail}"
+      alt="Shoes" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">${fullVidObj.video.title}</h2>
+    <p>${fullVidObj.video.description}</p>
+    <div class="card-actions justify-end">
+      <p>Views : ${fullVidObj.video.others.views}</p>
+      <p>Published Date : ${fullVidObj.video.others.posted_date}</p>
+    </div>
+  </div>
+</div>
+    `
+    modalContainer.appendChild(newElement);
+}
+
 // videos executation function
+
+
 // by using for OFF loop
 // const displayvideos = (videoobj) => {
 //     let arrfromObj = videoobj.videos;
@@ -68,8 +151,22 @@ const displayCategorys = (obj) => {
 
 // by using for each loop & according to video
 const displayVideos = (VidArr) => {
-    const videosArr = VidArr.videos;
     const videoContainer = document.getElementById("video-container");
+    videoContainer.innerHTML = "";
+    const objArrSerial = Object.keys(VidArr);
+    const videosArr = VidArr[objArrSerial[2]];
+    if (videosArr.length === 0) {
+        videoContainer.innerHTML = `
+        <div id="drawing-window" class="col-span-full py-28 space-y-8">
+                <div class="w-36 mx-auto">
+                    <img class="w-full" src="asset/Icon.png" alt="">
+                </div>
+                <p class="text-4xl font-bold text-[#171717] text-center">Oops!! Sorry, There is no <br> content here</p>
+            </div>
+        `
+        removeLoad()
+        return;
+    }
     videosArr.forEach(video => {
         const videoCard = document.createElement("div");
         videoCard.innerHTML = `
@@ -94,19 +191,30 @@ const displayVideos = (VidArr) => {
                         <h2 class="text-base font-bold text-[#171717]">${video.title}</h2>
                         <div class="flex items-center gap-1">
                             <p class="text-sm font-normal text-[#17171770]">${video.authors[0].profile_name}</p>
-                            <img class="w-5" src="asset/icons8-verified-48.png" alt="">
+                            ${video.authors[0].verified === true ? `<img class="w-5" src="asset/icons8-verified-48.png" alt="">` : `x`
+            }
                         </div>
                         <p class="text-sm font-normal text-[#17171770]">${video.others.views}</p>
                     </div>
                 </div>
+                <button class="btn border-none" onclick="my_modal_3.showModal(); loadDetails('${video.video_id}')">Explore Video Details</button>
             </div>
         `
         videoContainer.appendChild(videoCard);
+        removeLoad();
     });
 }
 
+document.getElementById("title-search").addEventListener("keyup", (event) => {
+    const searchData = event.target.value;
+    loadSearchVideos(searchData);
+    // loadVideos(searchData);
+})
+document.getElementById("title-search").addEventListener("focusout", () => {
+    document.querySelectorAll(".cmnBtn").forEach(x => {
+        x.removeAttribute("disabled");
+    })
+})
 
-
-// all function clling
+// all function calling
 loadCategorys();
-loadVideos();

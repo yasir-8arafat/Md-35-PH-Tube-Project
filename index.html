@@ -22,25 +22,36 @@
             font-family: "Inter", sans-serif;
             font-optical-sizing: auto;
         }
+
+        .active {
+            background-color: #FF1F3D;
+            color: white;
+        }
     </style>
 </head>
 
 <body class="inter-Font pb-6">
     <header class="container mx-auto py-8 border-b-2 border-gray-200">
-        <nav class="flex items-center justify-between px-4 sm:px-3">
+        <nav class="flex items-center justify-between px-4 sm:px-2">
             <!-- logo DIv -->
             <div class="w-[100px] sm:w-[180px]">
                 <img class="w-full" src="asset/Logo.png" alt="">
             </div>
             <!-- btn DIV -->
-            <div class="hidden sm:block">
-                <button
-                    class="text-xl text-[#252525] font-medium px-5 py-3 bg-gray-300 rounded-xl cursor-pointer hover:bg-green-200">Sort
-                    by
-                    view</button>
+            <div class="">
+                <label class="input">
+                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
+                            stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input id="title-search" class="max-w-20 sm:max-w-36" type="search" required placeholder="Search" />
+                </label>
             </div>
             <!-- blog btn div -->
-            <div>
+            <div class="hidden sm:block">
                 <button class="text-white font-medium text-lg bg-orange-500 px-5 py-3 rounded-lg">Blog</button>
             </div>
         </nav>
@@ -51,14 +62,37 @@
             <!-- category btn container -->
             <div id="category-Container" class="py-8 flex gap-1 sm:gap-6 justify-center items-center">
                 <div>
-                    <button class="btn bg-[#FF1F3D] text-white">ALL</button>
+                    <button id="all-btn" onclick="loadVideos()"
+                        class="btn cmnBtn hover:bg-[#FF1F3D] hover:text-white">ALL</button>
                 </div>
             </div>
+        </section>
+        <!-- loading section -->
+        <section id="load" class="text-center hidden">
+            <span class="loading loading-spinner loading-lg"></span>
         </section>
         <!-- Videos Load card section -->
         <section id="video-container"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-6">
+            <!-- Empty Window Design -->
+            <div id="drawing-window" class="col-span-full py-28 space-y-8">
+                <div class="w-36 mx-auto">
+                    <img class="w-full" src="asset/Icon.png" alt="">
+                </div>
+                <p class="text-4xl font-bold text-[#171717] text-center">Oops!! Sorry, There is no <br> content here</p>
+            </div>
         </section>
+        <!-- You can open the modal using ID.showModal() method -->
+        <dialog id="my_modal_3" class="modal">
+            <div class="modal-box">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <div id="details-container">
+
+                </div>
+            </div>
+        </dialog>
     </main>
     <footer>
 
